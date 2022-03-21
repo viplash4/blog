@@ -1,21 +1,21 @@
 import React, {useState, useContext} from 'react';
 import {Text, View, Button, TextInput, StyleSheet} from 'react-native';
 import { Context } from '../context/BlogContext';
+import BlogPostForm from '../components/BlogPostForm'; 
 
 const EditScreen = ({navigation}) => {
-    const {state } = useContext(Context);
+    const id = navigation.getParam('id');
+    const {state, editBlogPost } = useContext(Context);
 
-    const blogPost = state.find((blogPost) => blogPost.id === navigation.getParam('id'));
+    const blogPost = state.find((blogPost) => blogPost.id === id);
     const [title, setTitle] = useState(blogPost.title);
     const [content, setContent] = useState(blogPost.content);
 
     return (
-        <View>
-            <Text>Edit title:</Text>
-            <TextInput value={title} onChangeText={(newTitle) => setTitle(newTitle)}/>
-            <Text>Edit content:</Text>
-            <TextInput value={content} onChangeText={(newContent) => setContent(newContent)}/>
-        </View>
+        <BlogPostForm
+            initialValues={{title: blogPost.title, content: blogPost.content}}
+            onSubmit={(title,content) => {editBlogPost(id,title,content, () => navigation.pop())}}
+        />
     );
 };
 
